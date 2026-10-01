@@ -17,6 +17,7 @@ async function main(){
   for(const room of oldRooms)if(/^shivam-\d+-demo-token$/.test(room.qrToken))await tx.room.update({where:{id:room.id},data:{qrToken:randomBytes(32).toString('hex')}});
   for(const [name,minutes] of [['Freshen Room',20],['Extra Towels',10],['Drinking Water',5],['Maintenance Request',30],['Room Service',25],['Wake-up Call',5]] as const){if(!await tx.service.findFirst({where:{hotelId:h.id,name}}))await tx.service.create({data:{hotelId:h.id,name,estimatedMinutes:minutes}})}
   for(const [name,price] of [['Masala Omelette',180],['Paneer Tikka',320],['Butter Chicken',420],['Dal Makhani',280],['Fresh Lime Soda',120]] as const){if(!await tx.menuItem.findFirst({where:{hotelId:h.id,name}}))await tx.menuItem.create({data:{hotelId:h.id,name,price}})}
- });console.log('Setup complete. Existing records preserved. Sign in using ADMIN_EMAIL and ADMIN_PASSWORD.');
+  }, { timeout: 30000 });
+ console.log('Setup complete. Existing records preserved. Sign in using ADMIN_EMAIL and ADMIN_PASSWORD.');
 }
 main().catch(e=>{console.error(e.message);process.exitCode=1}).finally(()=>db.$disconnect());
